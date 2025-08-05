@@ -1,0 +1,41 @@
+/* Event-Typen Farben */
+.event-type-workshop {
+    --event-color: #FF5733;  /* Orange */
+    border-left: 4px solid var(--event-color);
+}
+
+.event-type-meeting {
+    --event-color: #338AFF;  /* Blau */
+    border-left: 4px solid var(--event-color);
+}
+
+/* Karten-Design */
+.event-card {
+    transition: transform 0.2s;
+    margin-bottom: 1.5rem;
+}
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+    .event-header {
+        flex-direction: column;
+    }
+}
+:root {
+    --primary: {{ EVENT_TYPE_COLOR }};
+    --primary-dark: color-mix(in srgb, var(--primary), black 15%);
+}
+
+/* Überschreibt Bootstrap-Standard */
+.btn-event {
+    @extend .btn;
+    background-color: var(--event-color);
+}
+
+@media print {
+    .no-print { display: none; }
+}

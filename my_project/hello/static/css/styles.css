@@ -1,0 +1,254 @@
+/* Header Styles */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #7B0080, #bae934);
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+/* Grundlegende Schriftart für alle Elemente */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-image {
+  height: 50px; /* Anpassbar */
+  width: auto;
+  padding: 0.5rem 1.5rem;
+}
+
+.logo-text {
+  font-family: 'Montserrat', sans-serif; /* Besondere Schriftart */
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* Für nicht-eingeloggte Seiten */
+.auth-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.auth-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    padding: 0px;
+}
+
+.auth-logo {
+    max-width: 300px;
+    height: auto;
+}
+
+/* Für Login/Register-Formulare */
+.auth-page .main-content {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto 40px;
+    padding: 20px;
+}
+
+/* Für Login/Register-Seiten */
+.auth-page .main-content {
+    margin-top: 20px; /* Reduzierter Abstand */
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.auth-page h2 {
+    margin-top: 20;
+    text-align: center;
+}
+
+/* styles.css */
+.main-content {
+    margin-top: 20px; /* Statt 60px */
+    padding: 20px;
+}
+.main-content h1 {
+    margin-top: -10px;
+}
+
+/* Speziell für Authentifizierungsseiten */
+body:not(.logged-in) .main-content {
+    margin-top: 0px;                          /* das hier passt den whitespace zwischen header und maincontent an */
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 1rem 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Active Link Styling */
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+.logout-form {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    color: inherit; /* Nimmt die gleiche Farbe wie der Eltern-Container an */
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline; /* Macht es wie einen Link aussehen */
+    margin-left: 10px; /* Abstand zum Username */
+}
+
+.logout-btn:hover {
+    color: #007bff; /* Blaue Farbe beim Hovern wie ein normaler Link */
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 80%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.99);
+    border-radius: 3px;
+}
+
+/* User Area */
+.user-area {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.user-area a {
+    color: #ffffff; /* Ihre Wunschfarbe - hier orange als Beispiel */
+    text-decoration: none; /* Entfernt die Standard-Unterstreichung */
+    margin-left: 10px; /* Abstand zum Benutzernamen */
+    transition: color 0.3s ease; /* Sanfter Farbübergang beim Hovern */
+}
+
+.user-area a:hover {
+    color: #ffffff; /* Dunklere Farbe beim Hovern */
+    text-decoration: underline; /* Unterstreichung beim Hovern */
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+/* Dropdown-Menüs */
+.dropdown-toggle::after {
+  vertical-align: middle;
+}
+
+.main-content {
+    padding: 20px;
+    margin-top: 60px; /* Damit der Content unter dem Header erscheint */
+}
+
+.dropdown-menu {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Modal-Overlay */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* In Ihrer CSS-Datei */
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.875em;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.form-text.text-muted {
+    color: #6c757d !important;
+    font-size: 0.85rem;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    position: absolute !important;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+}
+@media (max-width: 768px) {
+    .auth-wrapper {
+        margin: 20px 10px;
+        width: auto;
+    }
+}

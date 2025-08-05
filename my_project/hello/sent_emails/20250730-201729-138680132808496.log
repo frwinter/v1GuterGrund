@@ -1,0 +1,27 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Bitte aktivieren Sie Ihren Account
+From: webmaster@localhost
+To: solle@wolle.de
+Date: Wed, 30 Jul 2025 20:17:29 -0000
+Message-ID: <175390664963.839.1395558632812400058@franek-ThinkPad-T480>
+
+<!-- activation_email.html -->
+<!DOCTYPE html>
+<html>
+<body>
+  <h2>Aktivierung Ihres Accounts</h2>
+  <p>Hallo solle,</p>
+  <p>Klicken Sie zur Aktivierung:</p>
+  <a href="http://localhost:8000/register/activate/ajL4b5D4uX1NkSVnmxfygbO0PWi5JjL8dqrUr7gg/" 
+     style="background: #2563eb; color: white; padding: 10px 20px; text-decoration: none;">
+     Account aktivieren
+  </a>
+  <p>Der Link ist 24 Stunden gültig.</p>
+  <hr>
+  <p>Falls der Button nicht funktioniert, kopieren Sie:<br>
+  http://localhost:8000/register/activate/ajL4b5D4uX1NkSVnmxfygbO0PWi5JjL8dqrUr7gg/</p>
+</body>
+</html>
+-------------------------------------------------------------------------------

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}  
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Guter Grund{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <header class="header">
+        <div class="logo-container">
+            <img src="{% static 'img/logo_logo_text.png' %}" alt="Mein Logo" class="logo-image">
+            <span class="logo-text"></span>
+        </div>
+        
+        <nav class="nav-links">
+            {% url 'dashboard' as dashboard_url %}
+            <a href="{{ dashboard_url }}" 
+               class="nav-link {% if request.path == dashboard_url %}active{% endif %}">
+               Dashboard
+            </a>
+            
+            {% url 'contacts:index' as contacts_url %}
+            <a href="{{ contacts_url }}" 
+               class="nav-link {% if request.path == contacts_url %}active{% endif %}">
+               Kontakte
+            </a>
+            
+            {% url 'events:index' as events_url %}
+            <a href="{{ events_url }}" 
+               class="nav-link {% if request.path == events_url %}active{% endif %}">
+               Events
+            </a>
+        </nav>
+        
+        <div class="user-area">
+            <span class="username">{{ request.user.username }}</span>
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+            <form id="logout-form" action="{% url 'users:logout' %}" method="POST" style="display: none;">
+                {% csrf_token %}
+            </form>
+        </div>
+    </header>
+    {% else %}
+        <!-- Einfacher Header für nicht-eingeloggte Benutzer -->
+        <header class="header">
+            <div class="auth-logo-container">
+                <img src="{% static 'img/logo_logo_text.png' %}" alt="Mein Logo" class="logo-image">
+                <span class="logo-text"></span>
+            </div>
+        </header>
+    {% endif %}
+
+    <!-- WICHTIG: Haupt-Content-Block hinzufügen -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Optional: Footer-Block -->
+    {% block footer %}{% endblock %}
+</body>
+</html>

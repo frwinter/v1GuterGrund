@@ -1,0 +1,27 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Bitte aktivieren Sie Ihren Account
+From: webmaster@localhost
+To: neuernutzer@web.de
+Date: Wed, 30 Jul 2025 20:35:47 -0000
+Message-ID: <175390774734.1424.17023129233800453512@franek-ThinkPad-T480>
+
+<!-- activation_email.html -->
+<!DOCTYPE html>
+<html>
+<body>
+  <h2>Aktivierung Ihres Accounts</h2>
+  <p>Hallo neuernutzer,</p>
+  <p>Klicken Sie zur Aktivierung:</p>
+  <a href="http://localhost:8000/register/activate/B2acmQerzY29Nr9W42O3tZB9VEKlHQwf0vO05kX2/" 
+     style="background: #2563eb; color: white; padding: 10px 20px; text-decoration: none;">
+     Account aktivieren
+  </a>
+  <p>Der Link ist 24 Stunden gültig.</p>
+  <hr>
+  <p>Falls der Button nicht funktioniert, kopieren Sie:<br>
+  http://localhost:8000/register/activate/B2acmQerzY29Nr9W42O3tZB9VEKlHQwf0vO05kX2/</p>
+</body>
+</html>
+-------------------------------------------------------------------------------

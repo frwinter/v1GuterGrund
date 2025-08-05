@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="alert alert-success">
+    <h2>Account aktiviert!</h2>
+    <p>Ihr Account wurde erfolgreich aktiviert.</p>
+    <a href="{% url 'login' %}" class="btn btn-primary">Jetzt einloggen</a>
+</div>
+{% endblock %}

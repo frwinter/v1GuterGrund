@@ -1,0 +1,9 @@
+{% extends "../base.html" %}  <!-- Falls du ein Basis-Template hast -->
+{% block content %}
+<h2>Neuer Kontakt</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- Zeigt alle Formularfelder an -->
+    <button type="submit" class="btn btn-primary">Speichern</button>
+</form>
+{% endblock %}

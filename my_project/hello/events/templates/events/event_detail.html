@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="mobile-only">
+    <!-- Nur auf Handys sichtbar -->
+</div>
+<head>
+    <link rel="stylesheet" href="{% static 'css/events.css' %}">
+</head>
+<div class="event-header" style="--event-color: {{ object.event_type.color }};">
+    <!-- Nutze CSS-Variable -->
+    <style>
+        .btn-register {
+            background-color: var(--event-color);
+        }
+    </style>
+</div>
+<div class="container mt-4">
+    <!-- Kopfbereich -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ object.title }}</h1>
+        <span class="badge" style="background-color: {{ object.event_type.color }};">
+            {{ object.event_type.name }}
+        </span>
+    </div>
+
+    <!-- Basisinformationen -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">📅 Termin</h5>
+            <p class="card-text">
+                {{ object.start|date:"l, d. F Y" }}<br>
+                {{ object.start|date:"H:i" }} - {{ object.end|date:"H:i" }} Uhr
+            </p>
+        </div>
+    </div>
+
+    <!-- Ort/Link -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">📍 Location</h5>
+            <p class="card-text">
+                {{ object.location|default:"Wird noch bekannt gegeben" }}
+                {% if object.online_link %}
+                <br>
+                🔗 <a href="{{ object.online_link }}" target="_blank">Online teilnehmen</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Beschreibung -->
+    {% if object.description %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">📝 Beschreibung</h5>
+            <p class="card-text">{{ object.description|linebreaks }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Anmeldebutton -->
+    {% if object.is_registration_open %}
+    {% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn 
+            {% if object in user.events_attending.all %} 
+                btn-success 
+            {% else %} 
+                btn-primary 
+            {% endif %}">
+            
+            {% if object in user.events_attending.all %}
+                ✓ Angemeldet (Klicken zum Abmelden)
+            {% else %}
+                🎟️ Jetzt anmelden
+            {% endif %}
+        </button>
+    </form>
+{% else %}
+    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">
+        🚨 Zum Anmelden einloggen
+    </a>
+{% endif %}
+{% endif %}
+
+</div>
+{% if messages %}
+<div class="alert-container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<style>
+.alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+</style>
+
+{% endblock %}

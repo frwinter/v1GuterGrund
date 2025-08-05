@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Erfolgsmeldungen -->
+    {% if messages %}
+    <div class="alert alert-success">
+        {% for message in messages %}{{ message }}{% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Eigene Kontakte (bearbeitbar) -->
+    <form method="post" id="contact-form">
+        {% csrf_token %}
+        <h4>Meine Kontakte (bearbeitbar)</h4>
+        <div class="table-responsive">
+            <table class="table table-hover table-fixed">
+                <thead class="table-light">
+                    <tr>
+                        <th class="col-username">Zuständig</th>
+                        <th class="col-name">Vorname</th>
+                        <th class="col-name">Nachname</th>
+                        <th class="col-phone">Telefon</th>
+                        <th class="col-signal">Signal ID</th>
+                        <th class="col-status">Status</th>
+                        <th class="col-actions text-end">Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in contacts %}
+                    <tr>
+                        <td>{{ request.user.username }}</td>
+                        <td>
+                            <input type="text" name="first_name_{{ contact.id }}" 
+                                value="{{ contact.first_name }}" class="form-control form-control-sm">
+                        </td>
+                        <td>
+                            <input type="text" name="last_name_{{ contact.id }}" 
+                                value="{{ contact.last_name }}" class="form-control form-control-sm">
+                        </td>
+                        <td>
+                            <input type="text" name="phone_raw_{{ contact.id }}" 
+                                value="{{ contact.phone_raw }}" class="form-control form-control-sm">
+                        </td>
+                        <td>
+                            <input type="text" name="signal_id_{{ contact.id }}" 
+                                value="{{ contact.signal_id }}" class="form-control form-control-sm">
+                        </td>
+                        <td>
+                            <select name="status_{{ contact.id }}" class="form-select form-select-sm">
+                                {% for value, label in contact.STATUS_CHOICES %}
+                                <option value="{{ value }}" {% if contact.status == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="text-end">
+                            <form action="{% url 'contacts:delete' contact.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">X</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    <!-- Neuer Kontakt -->
+                    <tr class="table-primary">
+                        <td>{{ request.user.username }}</td>
+                        <td>
+                            <input type="text" name="new_first_name" placeholder="Vorname" 
+                                class="form-control form-control-sm">
+                        </td>
+                        <td>
+                            <input type="text" name="new_last_name" placeholder="Nachname" 
+                                class="form-control form-control-sm">
+                        </td>
+                        <td>
+                            <input type="text" name="new_phone_raw" placeholder="Telefon" 
+                                class="form-control form-control-sm">
+                        </td>
+                        <td>
+                            <input type="text" name="new_signal_id" placeholder="@signal" 
+                                class="form-control form-control-sm">
+                        </td>
+                        <td>
+                            <select name="new_status" class="form-select form-select-sm">
+                                {% for value, label in contacts.0.STATUS_CHOICES %}
+                                <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td class="text-end">
+                            <button type="submit" name="add_new" class="btn btn-sm btn-success">+</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="d-flex justify-content-between mt-3">
+            <div class="text-muted">
+                <small>Anzahl meiner Kontakte: {{ contacts|length }}</small>
+            </div>
+            <div>
+                <button type="submit" name="save_all" class="btn btn-primary">Alle Änderungen speichern</button>
+                <div class="text-success mt-1" id="save-confirmation">
+                    {% if saved %}Alle Änderungen gespeichert{% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Kontakte anderer Nutzer (nur Ansicht) -->
+    {% if contact_matches %}
+    <div class="other-contacts mt-5">
+        <h4>Kontakte anderer Nutzer (nur Ansicht)</h4>
+        <div class="table-responsive">
+            <table class="table table-hover table-fixed">
+                <thead class="table-light">
+                    <tr>
+                        <th class="col-username">Zuständig</th>
+                        <th class="col-name">Vorname</th>
+                        <th class="col-name">Nachname</th>
+                        <th class="col-phone">Telefon</th>
+                        <th class="col-signal">Signal ID</th>
+                        <th class="col-status">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in contacts %}
+                        {% if contact_matches|get_item:contact.id %}
+                            {% for match in contact_matches|get_item:contact.id %}
+                            <tr>
+                                <td>{{ match.user.username }}</td>
+                                <td>{{ match.first_name }}</td>
+                                <td>{{ match.last_name }}</td>
+                                <td>{{ match.phone_masked }}</td>
+                                <td>{{ match.signal_id|default:"-" }}</td>
+                                <td>
+                                    <span class="badge bg-{% if match.status == 'active' %}success{% else %}warning{% endif %}">
+                                        {{ match.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-muted">
+            <small>Anzahl fremder Kontakte: {{ contact_matches|length }}</small>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* Gleichmäßige Spaltenbreiten */
+    .table-fixed {
+        table-layout: fixed;
+        width: 50%;
+    }
+    
+    .col-username { width: 12%; }
+    .col-name { width: 15%; }
+    .col-phone { width: 20%; }
+    .col-signal { width: 15%; }
+    .col-status { width: 13%; }
+    .col-actions { width: 10%; }
+    
+    /* Responsive Anpassungen */
+    @media (max-width: 992px) {
+        .col-username { width: 15%; }
+        .col-name { width: 17%; }
+        .col-phone { width: 22%; }
+        .col-signal { width: 15%; }
+        .col-status { width: 13%; }
+        .col-actions { width: 10%; }
+    }
+    
+    /* Style für andere Kontakte */
+    .other-contacts {
+        border-top: 2px solid #dee2e6;
+        padding-top: 20px;
+    }
+    
+    .other-contacts table {
+        background-color: #f8f9fa;
+    }
+    
+    /* Text in Input-Feldern begrenzen */
+    .form-control-sm {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveButton = document.querySelector('button[name="save_all"]');
+        const confirmation = document.getElementById('save-confirmation');
+        
+        if (saveButton) {
+            saveButton.addEventListener('click', function() {
+                setTimeout(() => {
+                    confirmation.textContent = 'Alle Änderungen gespeichert';
+                    setTimeout(() => confirmation.textContent = '', 3000);
+                }, 500);
+            });
+        }
+    });
+</script>
+{% endblock %}

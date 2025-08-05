@@ -1,0 +1,17 @@
+<!-- activation_email.html -->
+<!DOCTYPE html>
+<html>
+<body>
+  <h2>Aktivierung Ihres Accounts</h2>
+  <p>Hallo {{ user.username }},</p>
+  <p>Klicken Sie zur Aktivierung:</p>
+  <a href="{{ protocol }}://{{ domain }}{% url 'users:activate' token=token %}" 
+     style="background: #2563eb; color: white; padding: 10px 20px; text-decoration: none;">
+     Account aktivieren
+  </a>
+  <p>Der Link ist 24 Stunden gültig.</p>
+  <hr>
+  <p>Falls der Button nicht funktioniert, kopieren Sie:<br>
+  {{ protocol }}://{{ domain }}{% url 'users:activate' token=token %}</p>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-success">
+        {{ message }}
+        <h4>🎉 Anmeldung erfolgreich!</h4>
+        <p>Du hast dich für das Event angemeldet.</p>
+        <a href="{% url 'event_detail' pk=event.pk %}" class="btn btn-secondary">
+            Zurück zum Event
+        </a>
+    </div>
+</div>
+{% endblock %}

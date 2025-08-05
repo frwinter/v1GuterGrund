@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="alert alert-danger">
+    <h2>Aktivierung fehlgeschlagen</h2>
+    <p>Der Aktivierungslink ist ungültig oder abgelaufen.</p>
+    <a href="{% url 'users:resend_activation' %}" class="btn btn-primary">
+        Aktivierungslink erneut senden
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+  <link rel="icon" href="{% static 'img/logo.png' %}">
+  <title>{% block title %}Guter Grund{% endblock %}</title>
+{% endblock %}
+
+{% block branding %}
+  <h1 id="site-name">
+    <img src="{% static 'img/logo_logo_text.png' %}" height="40px">
+    Administration
+  </h1>
+{% endblock %}
