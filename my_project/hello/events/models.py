@@ -12,6 +12,9 @@ class EventType(models.Model):
     name = models.CharField(max_length=50)  # z.B. "Workshop", "Meeting"
     color = models.CharField(max_length=7, default='#007bff')  # Hex-Farbe
 
+    def __str__(self):
+        return self.name
+
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()

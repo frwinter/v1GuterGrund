@@ -1,29 +1,182 @@
 {% extends "base.html" %}
-{% block content %}
-<div id="calendar"></div>
+{% load static %}
 
+{% block content %}
+<div class="calendar-container">
+    <div class="calendar-controls">
+        <div class="view-switcher">
+            <a href="{% url 'events:day_view' %}" class="btn {% if view_type == 'day' %}btn-primary{% else %}btn-outline-primary{% endif %}">Tag</a>
+            <a href="{% url 'events:week_view' %}" class="btn {% if view_type == 'week' %}btn-primary{% else %}btn-outline-primary{% endif %}">Woche</a>
+            <a href="{% url 'events:month_view' %}" class="btn {% if view_type == 'month' %}btn-primary{% else %}btn-outline-primary{% endif %}">Monat</a>
+            <a href="{% url 'events:list_view' %}" class="btn {% if view_type == 'list' %}btn-primary{% else %}btn-outline-primary{% endif %}">Liste</a>
+        </div>
+        
+        <div class="event-filter mt-3">
+            <h5>Eventtypen anzeigen:</h5>
+            <div class="filter-checkboxes">
+                {% for type in event_types %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" 
+                           id="type-{{ type.id }}" value="{{ type.id }}" checked
+                           onchange="filterEvents()">
+                    <label class="form-check-label" for="type-{{ type.id }}">
+                        <span class="color-dot" style="background:{{ type.color }}"></span>
+                        {{ type.name }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% if view_type != 'list' %}
+    <div id="calendar" class="mt-3"></div>
+    {% else %}
+    <div class="event-list mt-3">
+        {% for event in events %}
+        <div class="card mb-2" style="border-left: 4px solid {{ event.event_type.color }};">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.title }}</h5>
+                <p class="card-text">
+                    <small class="text-muted">
+                        {{ event.start|date:"d.m.Y H:i" }} - {{ event.end|date:"H:i" }}
+                    </small>
+                </p>
+                <a href="{% url 'events:event_detail' event.pk %}" class="btn btn-sm btn-primary">Details</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="alert alert-info">Keine Events gefunden</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% if view_type != 'list' %}
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-      initialView: 'dayGridMonth',
-      events: [
-        {% for event in events %}
-        {
-          title: '{{ event.title }}',
-          start: '{{ event.start|date:"Y-m-d H:i" }}',
-          end: '{{ event.end|date:"Y-m-d H:i" }}',
-          url: '{% url "events:event_detail" event.pk %}',
-          color: '{{ event.event_type.color }}'
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: '{{ view_type|default:"dayGridMonth" }}',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
-        {% endfor %}
-      ],
-      eventClick: function(info) {
-        info.jsEvent.preventDefault();
-        window.open(info.event.url, '_blank');
-      }
+        events: [
+            {% for event in events %}
+            {
+                title: '{{ event.title }}',
+                start: '{{ event.start|date:"Y-m-d\TH:i:s" }}',
+                {% if event.end %}
+                end: '{{ event.end|date:"Y-m-d\TH:i:s" }}',
+                {% endif %}
+                color: '{{ event.event_type.color }}',
+                url: '{% url "events:event_detail" event.pk %}',
+                extendedProps: {
+                    type: '{{ event.event_type.id }}'
+                }
+            },
+            {% endfor %}
+        ],
+        eventClick: function(info) {
+            info.jsEvent.preventDefault();
+            window.location.href = info.event.url;
+        },
+        locale: 'de',
+        firstDay: 1
     });
+
     calendar.render();
-  });
+
+    window.filterEvents = function() {
+        const checked = document.querySelectorAll('.event-filter input:checked');
+        const typeIds = Array.from(checked).map(c => c.value);
+        
+        calendar.getEvents().forEach(function(event) {
+            const eventType = event.extendedProps.type.toString();
+            event.setProp('display', typeIds.includes(eventType) ? 'auto' : 'none');
+        });
+    };
+});
 </script>
+{% endif %}
+
+<style>
+.calendar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.view-switcher {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+    background: white;
+}
+
+.event-filter {
+    margin-bottom: 20px;
+}
+
+.filter-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.color-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+#calendar {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.fc-daygrid-event {
+    font-size: 0.9em;
+    padding: 2px 4px;
+}
+
+.event-list .card {
+    border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+    .view-switcher {
+        flex-wrap: wrap;
+    }
+    
+    .filter-checkboxes {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+</style>
 {% endblock %}

@@ -19,10 +19,50 @@
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
+/* events/static/css/events.css */
+.calendar-controls {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.color-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.embedded-calendar {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
 /* Responsive Anpassungen */
 @media (max-width: 768px) {
     .event-header {
         flex-direction: column;
+    }
+    .event-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    }
+    .form-check-inline {
+        margin-right: 0;
+    }    
+    .view-switcher {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+    }    
+    .filter-options {
+        flex-direction: column;
+        gap: 5px;
     }
 }
 :root {

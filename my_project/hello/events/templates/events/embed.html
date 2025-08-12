@@ -1,0 +1,11 @@
+<!-- events/embed.html -->
+<div id="embedded-calendar-{{ config.id }}"></div>
+
+<script src="{% static 'js/embed.js' %}"></script>
+<script>
+initEmbeddedCalendar({
+    container: 'embedded-calendar-{{ config.id }}',
+    view: '{{ view }}',
+    types: [{{ types|join:',' }}]
+});
+</script>
