@@ -11,4 +11,4 @@ class EventAdmin(admin.ModelAdmin, ExportCsvMixin):
 @admin.register(EventType)
 class EventTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'color')
-    
+    search_fields = ('name',)

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="list-container">
+    <div class="list-controls">
+        <h2>Event-Übersicht</h2>
+        
+        <div class="event-filter">
+            <h4>Eventtypen anzeigen:</h4>
+            <div class="filter-options">
+                {% for type in event_types %}
+                <div class="filter-option">
+                    <input type="checkbox" 
+                           id="type-{{ type.id }}" 
+                           value="{{ type.id }}"
+                           {% if type.id|stringformat:"s" in request.GET.types or not request.GET.types %}checked{% endif %}
+                           onchange="updateFilter()">
+                    <label for="type-{{ type.id }}">
+                        <span class="color-dot" style="background:{{ type.color }}"></span>
+                        {{ type.name }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="event-list">
+        {% for event in events %}
+        <div class="event-card" style="border-left: 4px solid {{ event.event_type.color }};">
+            <div class="event-header">
+                <h3>{{ event.title }}</h3>
+                <span class="event-type" style="color: {{ event.event_type.color }};">
+                    {{ event.event_type.name }}
+                </span>
+            </div>
+            
+            <div class="event-date">
+                {{ event.start|date:"l, d. F Y" }}
+            </div>
+            
+            {% if event.location %}
+            <div class="event-location">
+                <i class="fas fa-map-marker-alt"></i> {{ event.location }}
+            </div>
+            {% endif %}
+            
+            <div class="event-actions">
+                <a href="{% url 'events:event_detail' event.pk %}" class="btn-details">
+                    Details & Anmeldung
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-events">
+            Keine Events gefunden
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function updateFilter() {
+    const checked = document.querySelectorAll('.event-filter input:checked');
+    const typeIds = Array.from(checked).map(c => c.value);
+    const params = new URLSearchParams(window.location.search);
+    
+    params.delete('types');
+    typeIds.forEach(id => params.append('types', id));
+    
+    window.location.search = params.toString();
+}
+</script>
+
+<style>
+.list-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.list-controls {
+    margin-bottom: 25px;
+}
+
+.event-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.event-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.event-type {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.event-date {
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.event-location {
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.btn-details {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.no-events {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+    .event-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+</style>
+{% endblock %}
